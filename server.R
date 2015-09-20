@@ -1,9 +1,10 @@
 library(shiny)
-library(shinyIncubator)
+##library(shinyIncubator)
 library(XLConnect)
 library(forecast)
 library(TTR)
 library(stringr)
+library(shinyjs)
 
 shinyServer(function(input, output,session) {
 #path<-"crap"

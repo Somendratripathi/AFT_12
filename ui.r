@@ -1,28 +1,31 @@
 library(shiny)
-library(shinyIncubator)
+##library(shinyIncubator)
+library(shinyjs)
 # ui.R
 
 #require(rCharts)
-options(RCHART_LIB = 'polycharts')
+#options(RCHART_LIB = 'polycharts')
 
-shinyUI(fluidPage(
-  tags$head(
-    tags$style(HTML("
-      @import url('//fonts.googleapis.com/css?family=Lobster|Cabin:400,700');
-      
-      h1 {
-      
-		background-color: #567194;
-      }
+shinyUI(fluidPage(      tags$head(
+    tags$link(rel = "stylesheet", type = "text/css", href = "https://googledrive.com/host/0B_fdodB_XjlmMlRibVNtS0xuak0/")
+),
+	#https://drive.google.com/open?id=0B_fdodB_XjlmMlRibVNtS0xuak0
+#https://googledrive.com/host/0B_fdodB_XjlmdUNReTBtY1Rab1k/
+#https://drive.google.com/file/d/0B_fdodB_XjlmdUNReTBtY1Rab1k/view?usp=sharing
 
-    "))
-  ),
-    
   headerPanel(
-  HTML('<div style="background-color: #567194;">
+  HTML('<div style="background-color: #404242;
+
+.shiny-progress .bar {
+background-color: BLUE;
+.opacity = 0.8;
+}
+.shiny-progress .progress {
+height:7px;
+}  ">
 <H3> 
-<div> <img src="http://cdn3.yourstory.com/wp-content/uploads/2014/01/LatentView_Analytics_Logo.jpg" style="width:100px;height:60px;display:inline-block;white-space:nowrap;border:1px solid #567194" class="ImageBorder"	align="left;top;" float="left">
-<div style="width:400px;height:60px;border:0px solid #567194;text-align:center; background-color: #567194;display:inline; white-space:nowrap;">
+<div> <img src="http://cdn3.yourstory.com/wp-content/uploads/2014/01/LatentView_Analytics_Logo.jpg" style="width:100px;height:60px;display:inline-block;white-space:nowrap;border:1px solid #404242" class="ImageBorder"	align="left;top;" float="left">
+<div style="width:400px;height:60px;border:0px solid #404242;text-align:center; background-color: #404242;display:inline; white-space:nowrap;">
 <font color="white">
 &nbsp&nbspFORECASTING TOOL 1.12 (BETA)&nbsp&nbsp
 </font>
@@ -63,7 +66,7 @@ column(8,
 	shinyjs::useShinyjs(),
     shinyjs::extendShinyjs(text = "shinyjs.refresh = function() { location.reload(); }"),
 
-    actionButton("refresh",label=HTML('<H6  style="font-family:arial; color:darkred">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspPRESS TO REFRESH THE APP&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</H6>')))
+    actionButton("refresh",label=HTML('<H6  style="font-family:arial; color:white">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspPRESS TO REFRESH THE APP&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</H6>')))
 	   ),
 	
 
@@ -94,14 +97,14 @@ fluidRow(
         choices = list("5%" = 0.05, "10%" = 0.10, "20%" = 0.20,  "last 3 dpts" = 3, "last 6 dpts" = 6), selected = 0.10))
 					    ),		
 
-
-
+#c93d2e
+#<a href="http://tinypic.com?ref=uv4fr" target="_blank"><img src="http://i59.tinypic.com/uv4fr.png" border="0" alt="Image and video hosting by TinyPic"></a>
 fluidRow(	
    column(8,
      # selectInput("ModelSelection", label =HTML('<H6  style="font-family:arial; color:darkred"><I>MODEL SELECTION</I></H6>'), 
      #   choices = list("-------ALL-------"), selected = 0)
 	 # <input id="outliers" type="checkbox"/>
-		checkboxInput("SplineSmoothing", label =HTML('<H6  style="font-family:arial; color:darkred"><I>SPLINE SMOOTHING</I></H6>'), value = FALSE)
+		checkboxInput("SplineSmoothing", label =HTML('<H6  style="font-family:arial; color:#404242"><B>SPLINE SMOOTHING &nbsp </B></H6>'), value = FALSE)
 		)
 						),
 						
@@ -114,7 +117,7 @@ fluidRow(
 	
 		    fluidRow(
 column(8,
- fileInput('file1', HTML('<H6  style="font-family:arial"><B>CHOOSE THE CSV FILE</B></H6>') ,
+ fileInput('file1', HTML('<H6  style="font-family:arial; color: #404242"><B>CHOOSE THE CSV FILE</B></H6>') ,
            accept=c('text/csv', 'text/comma-separated-values,text/plain', '.csv')))
      ),					
 						
@@ -140,14 +143,14 @@ column(8,
 	   position = "left",
 	  	
   mainPanel( 
- progressInit(),
-
+# progressInit(),
+#<a href="http://tinypic.com?ref=2m4vw2u" target="_blank"><img src="http://i57.tinypic.com/2m4vw2u.png" border="0" alt="Image and video hosting by TinyPic"></a>
  tabsetPanel(
          tabPanel("Readme",
-		
+		#<a href="http://tinypic.com?ref=2a8i4jr" target="_blank"><img src="http://i58.tinypic.com/2a8i4jr.png" border="0" alt="Image and video hosting by TinyPic"></a>
 		fluidRow(
-#<a href="http://tinypic.com?ref=nnlffc" target="_blank"><img src="http://i58.tinypic.com/nnlffc.png" border="0" alt="Image and video hosting by TinyPic"></a>
-HTML('<center><a target="_blank"><img src="http://i58.tinypic.com/nnlffc.png" border="0" alt="Image and video hosting by TinyPic"></a></center>')
+#<a href="http://tinypic.com?ref=2a8i4jr" target="_blank"><img src="http://i58.tinypic.com/2a8i4jr.png" border="0" alt="Image and video hosting by TinyPic"></a>
+HTML('<center><a target="_blank"><img src="https://googledrive.com/host/0B_fdodB_XjlmdUNReTBtY1Rab1k/" border="0" alt="SDT"></a></center>')
 		#style="width:900px;height:500px;display:inline-block;white-space:nowrap;border:0px solid #0080FF" class="ImageBorder">
 		)) 
 		
@@ -173,6 +176,6 @@ HTML('<center><a target="_blank"><img src="http://i58.tinypic.com/nnlffc.png" bo
     # draggable = TRUE)
   ),
    hr(),
-HTML('<H14  style="color:#567194; display:inline; white-space:nowrap;"><I>For suggestions,bugs or enquiring about the code, mail me at : somendra.tripathi@latentview.com
+HTML('<H14  style="color:#404242; display:inline; white-space:nowrap;"><I>For suggestions,bugs or enquiring about the code, mail me at : somendra.tripathi@latentview.com
 </I></H14>')
 ))
