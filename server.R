@@ -454,7 +454,7 @@ setProgress(#message = paste('End of forecasting, time taken:', proc.time() - pt
 			 Sys.sleep(3)	  
 				  
 setProgress(message = paste('You can now download the file'))				  
-				   Sys.sleep(5)	
+				   Sys.sleep(2)	
 
    return(a)
 	
