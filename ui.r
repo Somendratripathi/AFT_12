@@ -152,6 +152,15 @@ column(8,
 #<a href="http://tinypic.com?ref=2a8i4jr" target="_blank"><img src="http://i58.tinypic.com/2a8i4jr.png" border="0" alt="Image and video hosting by TinyPic"></a>
 HTML('<center><a target="_blank"><img src="https://googledrive.com/host/0B_fdodB_XjlmdUNReTBtY1Rab1k/" border="0" alt="SDT"></a></center>')
 		#style="width:900px;height:500px;display:inline-block;white-space:nowrap;border:0px solid #0080FF" class="ImageBorder">
+		)) ,
+		
+		 tabPanel("Xcel Prep",
+		#<a href="http://tinypic.com?ref=2a8i4jr" target="_blank"><img src="http://i58.tinypic.com/2a8i4jr.png" border="0" alt="Image and video hosting by TinyPic"></a>
+		fluidRow(
+		#https://drive.google.com/open?id=0B_fdodB_XjlmUFFlb3dsWS1QUDg
+#<a href="http://tinypic.com?ref=2a8i4jr" target="_blank"><img src="http://i58.tinypic.com/2a8i4jr.png" border="0" alt="Image and video hosting by TinyPic"></a>
+HTML('<center><a target="_blank" ><img src="https://googledrive.com/host/0B_fdodB_XjlmUFFlb3dsWS1QUDg/" border="0" alt="SDT"></a></center>')
+		#style="width:900px;height:500px;display:inline-block;white-space:nowrap;border:0px solid #0080FF" class="ImageBorder">
 		)) 
 		
 		, 
