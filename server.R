@@ -1,6 +1,6 @@
 library(shiny)
 ##library(shinyIncubator)
-#library(XLConnect)
+library(XLConnect)
 library(forecast)
 library(TTR)
 library(stringr)
@@ -347,17 +347,7 @@ len_DATA<-nrow(Data)
 Data_NARM<-data.frame(Data[is.na(Data)==F])
 len_DATANARM<- nrow(Data_NARM)
 lst_index <-len_DATA- match(Data_NARM[len_DATANARM,1],Data[len_DATA:1,1])+1
-print(paste("308"))
 
-if(min_mape==list_arim1[[2]])
-{
-print(paste("332"))
-Otp_ds<<-cbind(Otp_ds,c(as.numeric(ds[1:lst_index,i+1]),as.numeric(list_arim1[[1]]),rep(0,lotp-lst_index)))
-colnames(Otp_ds)[i+1] <<- paste(colnames(ds)[i+1],"Auto Arima")
-plotfor_all[[length(plotfor_all)+1]] <<- list_arim1[[3]]
-plotfit_all[[length(plotfit_all)+1]] <<- list_arim1[[4]]
-next
-}
 print(c(paste("329"),list_nnet[[2]]))
 
 if(min_mape==list_lm[[2]])
@@ -370,7 +360,17 @@ plotfit_all[[length(plotfit_all)+1]] <<- list_lm[[4]]
 next
 }
 
+print(paste("308"))
 
+if(min_mape==list_arim1[[2]])
+{
+print(paste("332"))
+Otp_ds<<-cbind(Otp_ds,c(as.numeric(ds[1:lst_index,i+1]),as.numeric(list_arim1[[1]]),rep(0,lotp-lst_index)))
+colnames(Otp_ds)[i+1] <<- paste(colnames(ds)[i+1],"Auto Arima")
+plotfor_all[[length(plotfor_all)+1]] <<- list_arim1[[3]]
+plotfit_all[[length(plotfit_all)+1]] <<- list_arim1[[4]]
+next
+}
 if(min_mape==list_holt1[[2]]) #&& is.na(list_holt1[[2]])==F)
 {
 print(paste("316"))
