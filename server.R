@@ -52,38 +52,41 @@ if (is.null(inFile))
 	  
 ###add cyc for ets/tbats
 #ETS Auto Holtwinters: 15 models (5 trends x 3 seasonal) compared with multiplicative & additive errors 
-Somholtwinter <- function(Var_ts,horizon,controlsz){
+Somholtwinter <- function(Var_ts,horizon,controlsz,fs){
 L_ts<-length(Var_ts)
-txn_holt<-ets(Var_ts[1:(L_ts-controlsz)])
-txn_adj_holt.for<-forecast(txn_holt, h=(horizon+controlsz),level=85)
+xxx<-ts(Var_ts[1:(L_ts-controlsz)],frequency=fs)
+txn_holt<-ets(xxx)
+txn_adj_holt.for<-forecast(txn_holt, h=(horizon+controlsz))
 list_holt<-list(txn_adj_holt.for$mean[(controlsz+1):length(txn_adj_holt.for$mean)],mape(Var_ts,txn_adj_holt.for,controlsz),txn_adj_holt.for,txn_holt)
 return(list_holt)
 }
 
 
 #TBATS for Time-series with complex seasonality (weekly/daily data) 
-Somtbats <- function(Var_ts,horizon,controlsz){
+Somtbats <- function(Var_ts,horizon,controlsz,fs){
 L_ts<-length(Var_ts)
-txn_holt<-tbats(Var_ts[1:(L_ts-controlsz)])
+xxx<-ts(Var_ts[1:(L_ts-controlsz)],frequency=fs)
+txn_holt<-tbats(xxx)
 txn_adj_holt.for<-forecast(txn_holt, h=(horizon+controlsz))
 list_holt<-list(txn_adj_holt.for$mean[(controlsz+1):length(txn_adj_holt.for$mean)],mape(Var_ts,txn_adj_holt.for,controlsz),txn_adj_holt.for,txn_holt)
 return(list_holt)
 }
 
 # Auto Arima: winner model picked basis mininum Akaike Information Critera (AIC) 
-SomArima <- function(Var_ts,horizon,controlsz){
+SomArima <- function(Var_ts,horizon,controlsz,fs){
 L_ts<-length(Var_ts)
-txn_holt<-auto.arima(Var_ts[1:(L_ts-controlsz)])
+xxx<-ts(Var_ts[1:(L_ts-controlsz)],frequency=fs)
+txn_holt<-auto.arima(xxx)
 txn_adj_holt.for<-forecast.Arima(txn_holt, h=(horizon+controlsz))
 list_holt<-list(txn_adj_holt.for$mean[(controlsz+1):length(txn_adj_holt.for$mean)],mape(Var_ts,txn_adj_holt.for,controlsz),txn_adj_holt.for,txn_holt)
 return(list_holt)
 }
 
 #Neural networks
-Somneural_net <- function(Var_ts,horizon,controlsz){
+Somneural_net <- function(Var_ts,horizon,controlsz,fs){
 L_ts<-length(Var_ts)
-
-txn_holt<-nnetar(Var_ts[1:(L_ts-controlsz)],repeats=10)
+xxx<-ts(Var_ts[1:(L_ts-controlsz)],frequency=fs)
+txn_holt<-nnetar(xxx,repeats=10)
 txn_adj_holt.for<-forecast(txn_holt, h=(horizon+controlsz))
 list_holt<-list(txn_adj_holt.for$mean[(controlsz+1):length(txn_adj_holt.for$mean)],mape(Var_ts,txn_adj_holt.for,controlsz),txn_adj_holt.for,txn_holt)
 return(list_holt)
@@ -92,10 +95,10 @@ return(list_holt)
 
 
 #Linear Regression with trend & seasonality
-Som_lm <- function(Var_ts,horizon,controlsz){
+Som_lm <- function(Var_ts,horizon,controlsz,fs){
 
 L_ts<-length(Var_ts)
-xxx<-ts(Var_ts[1:(L_ts-controlsz)],frequency=12)
+xxx<-ts(Var_ts[1:(L_ts-controlsz)],frequency=fs)
 txn_holt<-tslm(xxx ~ trend + season)
 txn_adj_holt.for<-forecast(txn_holt, h=(horizon+controlsz))
 list_holt<-list(txn_adj_holt.for$mean[(controlsz+1):length(txn_adj_holt.for$mean)],mape(Var_ts,txn_adj_holt.for,controlsz),txn_adj_holt.for,txn_holt)
@@ -133,12 +136,12 @@ mape<- function(time_Series,forecasts,controlsz)
 #mean(abs(fitted(forecasts)-time_series))
 
 L_ts<-length(time_Series)
-x<-sample.int((L_ts-controlsz), size = controlsz, replace = FALSE, prob = NULL)
+#x<-sample.int((L_ts-controlsz), size = controlsz, replace = FALSE, prob = NULL)
 
-m_in<- ((abs(fitted(forecasts)[x]-time_Series[x])*1.00)/time_Series[x])*100
-m_out<-((abs(forecasts$mean[1:controlsz]-time_Series[(L_ts-controlsz+1):L_ts])*1.00)/time_Series[(L_ts-controlsz+1):L_ts])*100
-
-MAPE<-mean(rbind(m_in,m_out))
+#m_in<- ((abs(fitted(forecasts)[x]-time_Series[x])*1.00)/time_Series[x])*100
+#m_out<-((abs(forecasts$mean[1:controlsz]-time_Series[(L_ts-controlsz+1):L_ts])*1.00)/time_Series[(L_ts-controlsz+1):L_ts])*100
+MAPE <-accuracy(forecasts,Var_ts[(L_ts-controlsz+1):L_ts])["Test set","MAPE"]
+#MAPE<-mean(rbind(m_in,m_out))
 return(MAPE)
 }
 
@@ -264,13 +267,13 @@ list_tbats[[1]]<-rep(NA,horizon - out_pts)
 #rownames(list_tbats[[2]]) <- c("NsdfULLNAME")
 
 print(paste("Forecasting for ",colnames(ds)[i+1],"Using Auto Arima : Less data points"))
-list_arim1<-SomArima(Var_ts,horizon,out_pts)
+list_arim1<-SomArima(Var_ts,horizon,out_pts,fs)
 
 print(paste("Forecasting for ",colnames(ds)[i+1],"Using Neural networks : Less data points"))
-list_nnet<-Somneural_net(Var_ts,horizon,out_pts)
+list_nnet<-Somneural_net(Var_ts,horizon,out_pts,fs)
 print(paste("238"))
 print(paste("Forecasting for ",colnames(ds)[i+1],"Using Linear Regression : Less data points"))
-list_lm<-Som_lm(Var_ts,horizon,out_pts)
+list_lm<-Som_lm(Var_ts,horizon,out_pts,fs)
 print(paste("241"))
 }
 else
@@ -281,20 +284,20 @@ else
 
 ####enough data points
 print(paste("Forecasting for ",colnames(ds)[i+1],"Using Auto ETS"))
-list_holt1<-Somholtwinter(Var_ts,horizon,out_pts)
+list_holt1<-Somholtwinter(Var_ts,horizon,out_pts,fs)
 
 print(paste("Forecasting for ",colnames(ds)[i+1],"Using TBATS"))
-list_tbats<-Somtbats(Var_ts,horizon,out_pts)
+list_tbats<-Somtbats(Var_ts,horizon,out_pts,fs)
 
 print(paste("Forecasting for ",colnames(ds)[i+1],"Using Auto Arima"))
-list_arim1<-SomArima(Var_ts,horizon,out_pts)
+list_arim1<-SomArima(Var_ts,horizon,out_pts,fs)
 
 print(paste("Forecasting for ",colnames(ds)[i+1],"Using Neural networks"))
-list_nnet<-Somneural_net(Var_ts,horizon,out_pts)
+list_nnet<-Somneural_net(Var_ts,horizon,out_pts,fs)
 print(paste("265"))
 
 print(paste("Forecasting for ",colnames(ds)[i+1],"Using Linear Regression"))
-list_lm<-Som_lm(Var_ts,horizon,out_pts)
+list_lm<-Som_lm(Var_ts,horizon,out_pts,fs)
 print(paste("268"))
 }
 print(paste("270"))
