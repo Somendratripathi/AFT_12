@@ -61,6 +61,17 @@ list_holt<-list(txn_adj_holt.for$mean[(controlsz+1):length(txn_adj_holt.for$mean
 return(list_holt)
 }
 
+#Somstlf
+
+Somstlf <- function(Var_ts,horizon,controlsz,fs){
+L_ts<-length(Var_ts)
+xxx<-ts(Var_ts[1:(L_ts-controlsz)],frequency=fs)
+txn_holt<-stlf(xxx)
+txn_adj_holt.for<-forecast(txn_holt, h=(horizon+controlsz))
+#list_holt<-list(txn_adj_holt.for$mean[(controlsz+1):(horizon+controlsz)])
+list_holt<-list(txn_adj_holt.for$mean[(controlsz+1):(horizon+controlsz)],mape(Var_ts,txn_adj_holt.for,controlsz),txn_adj_holt.for,txn_holt)
+return(list_holt)
+}
 
 #TBATS for Time-series with complex seasonality (weekly/daily data) 
 Somtbats <- function(Var_ts,horizon,controlsz,fs){
@@ -181,10 +192,10 @@ lotp<-length(ds[,1])
 #control required or not
 #controlreq<-input$controlreq1
 
-
+list_lm<-list()
 list_holt1<-list()
 list_tbats<-list()
-
+list_nnet<-list()
 #if(as.numeric(input$Mvariate) == 1)
 #{ v<-1 }
 #else 
@@ -256,36 +267,47 @@ if((length(Var_ts)-out_pts) <=2*as.numeric(fs) ) #cheking data points- out sampl
 
 print(paste("Forecasting for ",colnames(ds)[i+1],horizon,out_pts,"Using Auto ETS : Not enough data points"))
 list_holt1[[2]]<-c(MAPE=Inf)
-list_holt1[[1]]<-rep(NA,horizon - out_pts)
+list_holt1[[1]]<-rep(NA,horizon)
 #dim(list_holt1[[2]])<-c(1,1)
 #rownames(list_holt1[[2]]) <- c("NsdfULLNAME")
 
 print(paste("Forecasting for ",colnames(ds)[i+1],"Using TBATS : Not enough data points"))
 list_tbats[[2]]<-c(MAPE=Inf)
-list_tbats[[1]]<-rep(NA,horizon - out_pts)
+list_tbats[[1]]<-rep(NA,horizon)
 #dim(list_tbats[[2]])<-c(1,1)
 #rownames(list_tbats[[2]]) <- c("NsdfULLNAME")
 
 print(paste("Forecasting for ",colnames(ds)[i+1],"Using Auto Arima : Less data points"))
 list_arim1<-SomArima(Var_ts,horizon,out_pts,fs)
 
-print(paste("Forecasting for ",colnames(ds)[i+1],"Using Neural networks : Less data points"))
-list_nnet<-Somneural_net(Var_ts,horizon,out_pts,fs)
+print(paste("Forecasting for ",colnames(ds)[i+1],"Using Neural networks : Not enough data points"))
+#list_nnet<-Somneural_net(Var_ts,horizon,out_pts,fs)
+list_nnet[[2]]<-c(MAPE=Inf)
+list_nnet[[1]]<-rep(NA,horizon)
+
 print(paste("238"))
-print(paste("Forecasting for ",colnames(ds)[i+1],"Using Linear Regression : Less data points"))
-list_lm<-Som_lm(Var_ts,horizon,out_pts,fs)
+print(paste("Forecasting for ",colnames(ds)[i+1],"Using Linear Regression : Not enough data points"))
+#list_lm<-Som_lm(Var_ts,horizon,out_pts,fs)
+list_lm[[2]]<-c(MAPE=Inf)
+list_lm[[1]]<-rep(NA,horizon)
 print(paste("241"))
 }
 else
 {
 
 
-
-
+if(fs>24)
+{
+####enough data points
+print(paste("Forecasting for ",colnames(ds)[i+1],"Using Auto STLF + ETS"))
+list_holt1<-Somstlf(Var_ts,horizon,out_pts,fs)
+}
+else
+{
 ####enough data points
 print(paste("Forecasting for ",colnames(ds)[i+1],"Using Auto ETS"))
 list_holt1<-Somholtwinter(Var_ts,horizon,out_pts,fs)
-
+}
 print(paste("Forecasting for ",colnames(ds)[i+1],"Using TBATS"))
 list_tbats<-Somtbats(Var_ts,horizon,out_pts,fs)
 
@@ -351,7 +373,19 @@ Data_NARM<-data.frame(Data[is.na(Data)==F])
 len_DATANARM<- nrow(Data_NARM)
 lst_index <-len_DATA- match(Data_NARM[len_DATANARM,1],Data[len_DATA:1,1])+1
 
-print(c(paste("329"),list_nnet[[2]]))
+#print(c(paste("329"),list_nnet[[2]]))
+
+
+
+if(min_mape==list_arim1[[2]])
+{
+print(paste("332"))
+Otp_ds<<-cbind(Otp_ds,c(as.numeric(ds[1:lst_index,i+1]),as.numeric(list_arim1[[1]]),rep(0,lotp-lst_index)))
+colnames(Otp_ds)[i+1] <<- paste(colnames(ds)[i+1],"Auto Arima")
+plotfor_all[[length(plotfor_all)+1]] <<- list_arim1[[3]]
+plotfit_all[[length(plotfit_all)+1]] <<- list_arim1[[4]]
+next
+}
 
 if(min_mape==list_lm[[2]])
 {
@@ -365,15 +399,6 @@ next
 
 print(paste("308"))
 
-if(min_mape==list_arim1[[2]])
-{
-print(paste("332"))
-Otp_ds<<-cbind(Otp_ds,c(as.numeric(ds[1:lst_index,i+1]),as.numeric(list_arim1[[1]]),rep(0,lotp-lst_index)))
-colnames(Otp_ds)[i+1] <<- paste(colnames(ds)[i+1],"Auto Arima")
-plotfor_all[[length(plotfor_all)+1]] <<- list_arim1[[3]]
-plotfit_all[[length(plotfit_all)+1]] <<- list_arim1[[4]]
-next
-}
 if(min_mape==list_holt1[[2]]) #&& is.na(list_holt1[[2]])==F)
 {
 print(paste("316"))
