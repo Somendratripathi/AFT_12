@@ -501,22 +501,61 @@ setProgress(message = paste('You can now download the file'))
   # The content function is passed a filename as an argument, and
   #   it should write out data to that filename.
 output$downloadData <- downloadHandler(
-filename = function() { "output.xls" },
+# filename = function() { "output.xls" },
 
-    content = function(file){
-         	fname <- paste(file,"xls",sep=".")
-	wb <- loadWorkbook(fname, create = TRUE)
-      createSheet(wb, name = "Output")
-      createSheet(wb, name = "Mape")
-      writeWorksheet(wb, Otp_ds, sheet = "Output") # writes output
-      writeWorksheet(wb, mape.map, sheet = "Mape") # writes mape
-      saveWorkbook(wb)
-	  file.rename(fname, file)
-	  #input$Pressed=0
-	  }
+    # content = function(file){
+         	# fname <- paste(file,"xls",sep=".")
+	# wb <- loadWorkbook(fname, create = TRUE)
+	# i=ncol(Otp_ds)
+		  # {asname<-paste("output",i,)}
+	  # createSheet(wb, name = "Output")
+      
+      # writeWorksheet(wb, Otp_ds, sheet = "Output") # writes output
+	  # i=i-250
+	  # }
+	  # createSheet(wb, name = "Mape")
+      # writeWorksheet(wb, mape.map, sheet = "Mape") # writes mape
+      # saveWorkbook(wb)
+	  # file.rename(fname, file)
+	  # #input$Pressed=0
 	
-	
-	)
+
+
+      # content = function(file) {
+
+      # write.csv(Data(), file)
+      # }
+	  
+    filename = 'FORECAST.csv',
+    content = function(file) {
+      #tmpdir <- tempdir()
+      #setwd(tempdir())
+     # print(tempdir())
+
+     # fs <- c("Otp_ds.csv", "mape.csv")
+      write.csv(Otp_ds, file )
+      #write.csv(mape.map, file = "mape.csv")
+     # print (fs)
+
+      #zip(zipfile=fname, files=fs)
+	  
+	  #if(file.exists(paste0(fname, ".zip"))) {file.rename(paste0(fname, ".zip"), fname)}
+	 # if(file.exists(paste0(fname, ".csv"))) {file.rename(paste0(fname, ".csv"), fname)}
+    },
+    contentType = "application/csv"
+  )
+  
+  output$downloadMape <- downloadHandler(
+	  
+    filename = 'mape.csv',
+    content = function(file) {
+      write.csv(mape.map, file)
+    },
+    contentType = "application/csv"
+  )
+
+  
+  
 	}
 
 )

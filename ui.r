@@ -134,11 +134,11 @@ column(8,
     # column(8,
 	        # helpText("Press download once the forecast completes."))
   # ),
- column(8,
+ column(4,
  br(),
-  downloadButton('downloadData', 'Download'))
-  
-
+  downloadButton('downloadData', 'Download Forecast'),
+  downloadButton('downloadMape', 'Download MAPE')
+)
  ),
 	   position = "left",
 	  	
