@@ -1,6 +1,6 @@
 library(shiny)
 ##library(shinyIncubator)
-library(XLConnect)
+##library(XLConnect)
 library(forecast)
 library(TTR)
 library(stringr)
