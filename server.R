@@ -87,7 +87,7 @@ return(list_holt)
 SomArima <- function(Var_ts,horizon,controlsz,fs){
 L_ts<-length(Var_ts)
 xxx<-ts(Var_ts[1:(L_ts-controlsz)],frequency=fs)
-txn_holt<-auto.arima(xxx)
+txn_holt<-auto.arima(xxx,stepwise=FALSE)
 txn_adj_holt.for<-forecast.Arima(txn_holt, h=(horizon+controlsz))
 list_holt<-list(txn_adj_holt.for$mean[(controlsz+1):length(txn_adj_holt.for$mean)],mape(Var_ts,txn_adj_holt.for,controlsz),txn_adj_holt.for,txn_holt)
 return(list_holt)
